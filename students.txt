@@ -1,1 +1,9 @@
-Huzaifa	25L-1111	BCS-meri
+muaaz	123	bcs1f
+Muaaz	123	111
+huzaifa	1234	234
+hady	456	432
+hamees	678	67
+malik	311	bcs1f
+ahmed kashan	890	bcs1f
+muizz	895	bcs1f
+ahmed khan 	099	bcs1f
