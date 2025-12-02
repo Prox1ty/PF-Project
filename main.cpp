@@ -70,12 +70,19 @@ int main()
     int choice;
     do
     {
-        cout << "Select Action: " << endl
-             << "\t1. Enter New Student Record. " << endl
-             << "\t2. Retrieve Student Data. " << endl
-             << "\t3. Update or delete Student Data." << endl
-             << "\t4. Show Class Performance Report." << endl
-             << "\t5. Exit."<<endl
+        cout << "Select Action: " << endl << endl
+        << setw(60) << setfill('-') << " " << setfill(' ') << endl 
+             << '|' << setw(51) <<  left 
+             << "\t1. Enter New Student Record. " << right << '|' << endl
+             << '|' << setw(51) << left 
+             << "\t2. Retrieve Student Data. " << right << '|' << endl
+             << '|' << setw(51) << left
+             << "\t3. Update or delete Student Data." << right << '|' << endl
+             << '|' << setw(51) << left
+             << "\t4. Show Class Performance Report." << right << '|' << endl
+             << '|' << setw(51) << left
+             << "\t5. Exit."<<  right << '|' << endl
+             << setw(60) << setfill('-') << " " << setfill(' ') << setw(60)
              << "\nSelect Choice: ";
         cin >> choice;
         switch (choice)
@@ -129,7 +136,14 @@ int main()
         }
         case 2:
         {
-            cout << "Select: " << endl << "\t1. All Students." << endl << "\t2. Particular Student (Roll Number Required)." << endl<<"Enter Choice: ";
+            cout << "Select: " << endl
+            << setw(60) << setfill('-') << " " << setfill(' ') << endl
+            << '|' << setw(51) << left  
+            << "\t1. All Students." << right << '|' << endl
+            << '|' << setw(51) << left
+            << "\t2. Particular Student (Roll Number Required)." << right << '|' << endl
+            << setw(60) << setfill('-') << " " << setfill(' ') << endl
+            <<"Enter Choice: ";
             int dataChoice;
             inQuery: 
             cin >> dataChoice;
@@ -140,14 +154,17 @@ int main()
                 }
                 cout << endl;
             } else if (dataChoice == 2) {
-                cout << "Enter Roll Number of the Required Student: ";
+                cin.ignore();
                 string rNum;
+                do {
+                cout << "Enter Roll Number of the Required Student: ";
                 cin >> rNum;
+                } while (!validateRollNum(rNum));
                 // for printing line
                 displayLine();
                 // line ends here
                 // student data begins here
-                int stdntsIdx, marksIdx;
+                int stdntsIdx = -1, marksIdx = -1;
                 for (int i = 0; i < noOfStudents; i++) {
                     if (students[i].rollNum == rNum) {
                         stdntsIdx = i;
@@ -189,7 +206,11 @@ int main()
         case 5:
         {
             return 0;
+            break;
         }
+        default: 
+            cout << "Invalid choice. Please select a number between 1 and 5" << endl;
+            break;
         }
 
     } while (choice > 0 && choice <= 6);
@@ -199,13 +220,14 @@ int main()
 
 void displayLine() {
     // big line
+    cout << setw(56) << setfill('-') << " " << endl << setfill(' ');
     cout << '|' << setw(8) << left << "ROLL NUM" << '|'
          << setw(20) << right << "NAME" << '|'
          << setw(10) << right << "SECTION" << '|'
          << setw(6) << right << "%" << '|'
          << setw(5) << right << "GRADE" << '|' << '\n';
          
-    cout << setw(55) << setfill('-') << " " << endl << setfill(' ');
+    cout << setw(56) << setfill('-') << " " << endl << setfill(' ');
 }
 
 void displayStudentData(Student student, MarksStruct mark) {
@@ -218,7 +240,7 @@ void displayStudentData(Student student, MarksStruct mark) {
     << setw(10) << right << student.section << '|'
     << setw(6) << right << fixed << setprecision(1) << mark.percentage << '|'
     << setw(5) << right << mark.grade << '|' << '\n';
-    cout << setw(55) << setfill('-') << " " << endl << setfill(' ');
+    cout << setw(56) << setfill('-') << " " << endl << setfill(' ');
 }
 
 bool doesStudentExist(string fileName, string rollNum)
@@ -604,24 +626,34 @@ void updateStudentData(Student students[], MarksStruct marks[], string studentsF
     int choice;
     do{
         cout << "What do you want to update / delete from?" << endl;
-        cout << "\t1. Students Information" << endl
-            << "\t2. Marks of a Student" << endl
-            <<"Enter Choice: ";
+        cout << setw(60) << setfill('-') << " " << setfill(' ') << endl;
+        cout << '|' << setw(51) << left
+        << "\t1. Students Information" << right << '|' << endl
+        << '|' << setw(51) << left 
+        << "\t2. Marks of a Student" << right << '|' << endl
+        << setw(60) << setfill('-') << " " << setfill(' ') << endl
+        <<"Enter Choice: ";
         cin >> choice;
         if(choice<0||choice>2)
             cout<<"Enter Valid Option 1 or 2\n";
     }while(choice<0||choice>2);
     if (choice == 1) {
         cout << " Do you want to:" << endl;
-        cout << "\t1. Change Student Data" << endl
-            << "\t2. Delete Student" << endl
+        cout << setw(60) << setfill('-') << " " << setfill(' ') << endl;
+        cout << '|' << setw(51) << left
+        << "\t1. Change Student Data" << '|' << endl
+        << '|' << setw(51) << left
+        << "\t2. Delete Student" << right << '|' << endl;
+        cout << setw(60) << setfill('-') << " " << setfill(' ') << endl
             <<"Enter Choice: ";
         cin >> choice;
         if (choice == 1) {
+            cin.ignore();
             beginDeleteQuery:
             cout << "Enter the Roll Number of the Student (In 25L-0123 Format): ";
             string rNum;
             cin >> rNum;
+            if (!validateRollNum(rNum)) goto beginDeleteQuery;
             if (!doesStudentExist(studentsFile, rNum)) {
                 cout << "Student does not exist!" << endl;
                 goto beginDeleteQuery;
@@ -641,21 +673,26 @@ void updateStudentData(Student students[], MarksStruct marks[], string studentsF
 
             do{
                 cout << "What do you want to change?" << endl;
-                cout << "\t1. Name of Student " << endl
-                    << "\t2. Section of Student " << endl
-                    << "\t3. RollNum of Student (Possible loss of data) " << endl
+                cout << setw(60) << setfill('-') << " " << setfill(' ') << endl
+                << '|' << setw(51) << left
+                << "\t1. Name of Student " << right << '|' << endl
+                << '|' << setw(51) << left
+                << "\t2. Section of Student " << right << '|' << endl
+                << '|' << setw(51) << left
+                << "\t3. RollNum of Student " << right << '|' << endl;
+                cout << setw(60) << setfill('-') << " " << setfill(' ') << endl
                     <<"Enter Choice: ";
                 cin >> choice;
                 if (choice<0||choice>3)
                     cout<<"Invalid Input.\n";
             }while(choice<0||choice>3);
             if (choice == 3) {
+                cin.ignore();
                 inputRollNum:
                 string newRollNum;
                 do{
                     cout << "Enter new Roll Number: ";
                     
-                    cin.ignore();
                     getline(cin, newRollNum);
                 }while(!validateRollNum(newRollNum));
 
@@ -669,6 +706,7 @@ void updateStudentData(Student students[], MarksStruct marks[], string studentsF
                     }
                 }
             } else if (choice == 2) {
+                cin.ignore();
                 string newSection;
                 do{
                     cout << "Enter New Section Name: ";
@@ -679,6 +717,7 @@ void updateStudentData(Student students[], MarksStruct marks[], string studentsF
                     cout << "Section changed sucessfully!" << endl;
                 }
             } else if (choice == 1) {
+                cin.ignore();
                 string revisedName;
                 do{
                     cout << "Enter revised Name: ";
@@ -701,11 +740,15 @@ void updateStudentData(Student students[], MarksStruct marks[], string studentsF
             // student data ends here
             addChangesToStudentFile(studentsFile, students, noOfStudents);
         } else if (choice == 2) {
+            cin.ignore();
             beginQuery:
             cout << "Enter Roll Number of student whose data you want deleted: ";
             string rNum;
-            cin.ignore();
             getline(cin, rNum);
+            if (!validateRollNum(rNum)) {
+                cout << "Invalid rollNumber" << endl;
+                goto beginQuery;
+            }
             if (!doesStudentExist) {
                 cout << "Student does not exist!" << endl;
                 goto beginQuery;
@@ -728,11 +771,15 @@ void updateStudentData(Student students[], MarksStruct marks[], string studentsF
             }
         }
     } else if (choice == 2) {
+        cin.ignore();
         changeQuery:
         cout << "Enter Roll Number of student whose marks you want to change: ";
         string rNum;
-        cin.ignore();
         getline(cin, rNum);
+        if (!validateRollNum(rNum)) {
+            cout << "Invalid rollNumber" << endl;
+            goto changeQuery;
+        }
         if (!doesStudentExist(studentsFile, rNum)) {
             cout << "Student does not exist!" << endl;
             goto changeQuery;
@@ -747,9 +794,14 @@ void updateStudentData(Student students[], MarksStruct marks[], string studentsF
         int input;
         do{
             cout << "Select what you want to change" << endl;
-            cout << "\t1. Quiz marks" << endl
-                << "\t2. Mids marks" << endl
-                << "\t3. Final marks" << endl
+            cout << setw(60) << setfill('-') << " " << setfill(' ') << endl;
+            cout << '|' << setw(51) << left
+            << "\t1. Quiz marks" << right << '|' << endl
+            << '|' << setw(51) << left
+            <<  "\t2. Mids marks" << right << '|' << endl
+            << '|' << setw(51) << left
+            << "\t3. Final marks" << right << '|' << endl;
+            cout << setw(60) << setfill('-') << " " << setfill(' ') << endl
                 <<"Enter choice: ";
             cin >> input;
             if (input<0||input>3)
@@ -758,9 +810,14 @@ void updateStudentData(Student students[], MarksStruct marks[], string studentsF
         if (input == 1) {
                 do{
                     cout << "Which quiz?" << endl;
-                    cout << "\t1. Quiz 1" << endl
-                        << "\t2. Quiz 2" << endl
-                        << "\t3. Quiz 3" << endl
+                    cout << setw(60) << setfill('-') << " " << setfill(' ') << endl;
+                    cout << '|' << setw(51) << left
+                    << "\t1. Quiz 1" << right << '|' << endl
+                    << '|' << setw(51) << left
+                    << "\t2. Quiz 2" << right << '|' << endl
+                    << '|' << setw(51) << left
+                    << "\t3. Quiz 3" << right << '|' << endl;
+                    cout << setw(60) << setfill('-') << " " << setfill(' ') << endl
                         <<"Enter Choice: ";
                     cin >> input;
                     if (input<0||input>3)
@@ -776,10 +833,14 @@ void updateStudentData(Student students[], MarksStruct marks[], string studentsF
             int midNum;
             do{
                 cout << "Which Mid?" << endl;
-                cout << "\t1. Mid 1" << endl
-                    << "\t2. Mid 2" << endl
+                    cout << setw(60) << setfill('-') << " " << setfill(' ') << endl;
+                    cout << '|' << setw(51) << left
+                    << "\t1. Mid 1" << right << '|' << endl
+                    << '|' << setw(51) << left
+                    << "\t2. Mid 2" << right << '|' << endl;
+                    cout << setw(60) << setfill('-') << " " << setfill(' ') << endl
                     <<"Enter Choice: ";
-                cin >> midNum;
+                    cin >> midNum;
                 if (midNum<0||midNum>2)
                     cout<<"Invalid Input\n";
             }while(midNum<0||midNum>2);
@@ -909,21 +970,21 @@ bool validateRollNum(string rollNum){
     }
     for (int i=0;i<2;i++){
         if (!isdigit(rollNum[i])){
-            cout<<"Invalid RollNumber, First 2 Charachters must be digits (eg.25L-0123)\n";
+            cout<<"Invalid RollNumber, First 2 Characters must be digits (eg.25L-0123)\n";
             return false;
         }
     }
     if (!isupper(rollNum[2])){
-        cout<<"Invalid Roll Number, 3rd Charachter must be an uppercase letter.(eg. 25L-0123)\n";
+        cout<<"Invalid Roll Number, 3rd Character must be an uppercase letter.(eg. 25L-0123)\n";
         return false;
     }
     if (rollNum[3]!='-'){
-        cout<<"Invalid Roll Number, 4th Charachter of the ID must be a hyphen (eg. 25L-0123)\n";
+        cout<<"Invalid Roll Number, 4th Character of the ID must be a hyphen (eg. 25L-0123)\n";
         return false;
     }
     for (int i=4;i<8;i++){
         if (!isdigit(rollNum[i])){
-            cout<<"Invalid Roll Number, Charachters after the hyphen must be digits.(eg. 25L-0123)\n";
+            cout<<"Invalid Roll Number, Characters after the hyphen must be digits.(eg. 25L-0123)\n";
             return false;
         }
     }
@@ -931,25 +992,25 @@ bool validateRollNum(string rollNum){
 }
 bool validateSection(string section){
     if (section.length()!=6){
-        cout<<"Section must be 6 charachter long (e.g. BCS-1F): \n";
+        cout<<"Section must be 6 character long (e.g. BCS-1F): \n";
         return false;
     }
     for (int i=0;i<3;i++){
         if (!isupper(section[i])){
-            cout<<"Invalid Section. First three charachters must be letters (e.g. BCS-1F)\n";
+            cout<<"Invalid Section. First three characters must be letters (e.g. BCS-1F)\n";
             return false;
         }
     }
     if (section[3]!='-'){
-        cout<<"Invalid Section, 4th Charachter of the ID must be a hyphen (eg. BCS-1F)\n";
+        cout<<"Invalid Section, 4th Character of the ID must be a hyphen (eg. BCS-1F)\n";
         return false;
     }
     if (!isdigit(section[4])){
-        cout<<"Invalid Section. 5th chrachter must be a digit (e.g. BCS-1F).\n";
+        cout<<"Invalid Section. 5th charachter must be a digit (e.g. BCS-1F).\n";
         return false;
     }
     if (!isupper(section[5])){
-        cout<<"Invalid Section. 6th charachter must be an uppercase letter (e.g. BCS-1F)\n";
+        cout<<"Invalid Section. 6th character must be an uppercase letter (e.g. BCS-1F)\n";
         return false;
     }
 
